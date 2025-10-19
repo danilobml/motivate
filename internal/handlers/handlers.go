@@ -42,6 +42,8 @@ func (qr *QuotesRouter) getRandomQuote(w http.ResponseWriter, r *http.Request) {
 }
 
 func (qr *QuotesRouter) createQuote(w http.ResponseWriter, r *http.Request) {
+	r.Body = http.MaxBytesReader(w, r.Body, 1<<20)
+
 	quote := NewQuoteRequest{}
 	err := json.NewDecoder(r.Body).Decode(&quote)
 	if err != nil {
