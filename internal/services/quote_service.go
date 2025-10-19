@@ -82,7 +82,7 @@ func (qs *QuoteService) SeedDbFromFile(filePath string) error {
 	}
 
 	elapsed := time.Since(start)
-	log.Printf("Quotes db seeded successfully! Elapsed time: %v\n", elapsed)
+	log.Printf("Quotes DB seeded successfully! Quotes loaded: %d. Elapsed time: %v.\n", len(quotes), elapsed)
 
 	return nil
 }
