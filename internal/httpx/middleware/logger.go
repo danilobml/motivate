@@ -27,6 +27,8 @@ func Logger(next http.Handler) http.Handler {
 			sw.status = http.StatusOK
 		}
 
-		log.Printf("Request URI: %s, Method: %s, Status: %d, Latency: %v", r.RequestURI, r.Method, sw.status,time.Since(start))
+		requestId := r.Header.Get("X-Request-ID") 
+
+		log.Printf("Request URI: %s, RequestId: %s, Method: %s, Status: %d, Latency: %v", r.RequestURI, requestId, r.Method, sw.status,time.Since(start))
 	})
 }
