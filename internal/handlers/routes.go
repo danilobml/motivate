@@ -6,10 +6,11 @@ import (
 	"github.com/danilobml/motivate/internal/httpx/middleware"
 )
 
-func RegisterRoutes() http.Handler {
+func RegisterRoutes(qr *QuotesRouter) http.Handler {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("GET /health", getHealthHandler)
+	mux.HandleFunc("GET /health", getHealth)
+	mux.HandleFunc("GET /quote", qr.getRandomQuote)
 
 	return middleware.Logger(middleware.Recover(mux))
 }
