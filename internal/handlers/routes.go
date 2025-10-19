@@ -11,6 +11,7 @@ func RegisterRoutes(qr *QuotesRouter) http.Handler {
 
 	mux.HandleFunc("GET /health", getHealth)
 	mux.HandleFunc("GET /quote", qr.getRandomQuote)
+	mux.HandleFunc("POST /add", qr.createQuote)
 
 	return middleware.Logger(middleware.Recover(mux))
 }

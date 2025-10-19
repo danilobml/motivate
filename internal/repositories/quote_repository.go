@@ -43,16 +43,16 @@ func (ir *InMemoryQuoteRepository) Find(id string) (*models.Quote, error) {
 	return nil, errs.ErrNotFound
 }
 
-func (ir *InMemoryQuoteRepository) Save(q models.Quote) (*models.Quote, error) {
-	dbQuote, err := ir.Find(q.Id)
+func (ir *InMemoryQuoteRepository) Save(quote models.Quote) (*models.Quote, error) {
+	dbQuote, err := ir.Find(quote.Id)
 
 	switch {
 	case err == nil:
-		dbQuote.Author = q.Author
-		dbQuote.Text = q.Text
+		dbQuote.Author = quote.Author
+		dbQuote.Text = quote.Text
 		return dbQuote, nil
 	case errors.Is(err, errs.ErrNotFound):
-		ir.data = append(ir.data, q)
+		ir.data = append(ir.data, quote)
 		return &ir.data[len(ir.data)-1], nil
 	default:
 		return nil, err

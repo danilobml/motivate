@@ -3,6 +3,8 @@ package services
 import (
 	"math/rand"
 
+    "github.com/google/uuid"
+
 	"github.com/danilobml/motivate/internal/errs"
 	"github.com/danilobml/motivate/internal/models"
 	"github.com/danilobml/motivate/internal/repositories"
@@ -28,4 +30,21 @@ func (qs *QuoteService) GetRandomQuote() (*models.Quote, error) {
 	index := rand.Intn(len(quotes))
 
 	return &quotes[index], nil
+}
+
+func (qs *QuoteService) CreateQuote(text, author string) (*models.Quote, error) {
+	id := uuid.New().String()
+
+	newQuote := models.Quote{
+		Id: id,
+		Text: text,
+		Author: author,
+	}
+
+	quote, err := qs.quoteRepository.Save(newQuote)
+	if err != nil {
+		return nil, err
+	}
+
+	return quote, nil
 }
