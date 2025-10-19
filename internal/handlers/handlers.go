@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/go-playground/validator/v10"
 
@@ -57,12 +58,16 @@ func (qr *QuotesRouter) createQuote(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-	newQuote, err := qr.quotesService.CreateQuote(quote.Text, quote.Author)
+	text := strings.TrimSpace(quote.Text)
+	author := strings.TrimSpace(quote.Author)
+
+	newQuote, err := qr.quotesService.CreateQuote(text, author)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(newQuote)
 }
