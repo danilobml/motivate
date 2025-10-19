@@ -1,7 +1,11 @@
 package repositories
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
+	"log"
+	"os"
 	"slices"
 
 	"github.com/danilobml/motivate/internal/errs"
@@ -14,18 +18,7 @@ type InMemoryQuoteRepository struct {
 
 func NewInMemoryQuoteRepository() *InMemoryQuoteRepository {
 	return &InMemoryQuoteRepository{
-		data: []models.Quote{
-			{
-				Id:     "1",
-				Text:   "Test quote",
-				Author: "TestAuthor",
-			},
-			{
-				Id:     "2",
-				Text:   "Test quote 2",
-				Author: "TestAuthor 2",
-			},
-		},
+		data: []models.Quote{},
 	}
 }
 
@@ -68,6 +61,27 @@ func (ir *InMemoryQuoteRepository) Delete(id string) error {
 	ir.data = slices.DeleteFunc(ir.data, func(quote models.Quote) bool {
 		return quote.Id == id
 	})
+
+	return nil
+}
+
+func (ir *InMemoryQuoteRepository) SeedDbFromFile(filePath string) error {
+	file, err := os.Open(filePath)
+	if err != nil {
+		message := fmt.Sprintf("Failed to open json file: %s", err.Error())
+		return errors.New(message)
+	}
+	defer file.Close()
+
+	quotes := []models.Quote{}
+	err = json.NewDecoder(file).Decode(&quotes)
+	if err != nil {
+		return err
+	}
+
+	ir.data = append(ir.data, quotes...)
+
+	log.Println("Quotes db seeded successfully!")
 
 	return nil
 }
