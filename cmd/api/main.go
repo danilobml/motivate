@@ -24,7 +24,7 @@ func main() {
 	if *seedFilePath == "" || filepath.Ext(*seedFilePath) != ".json" {
 		log.Println("No valid json seed file path given. The API will initialize unseeded.")
 	} else {
-		err := quotesRepo.SeedDbFromFile(*seedFilePath)
+		err := quotesService.SeedDbFromFile(*seedFilePath)
 		if err != nil {
 			log.Printf("Error seeding DB: %s. The API will initialize unseeded.", err.Error())
 		}

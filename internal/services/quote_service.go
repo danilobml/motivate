@@ -1,9 +1,15 @@
 package services
 
 import (
+	"encoding/json"
+	"errors"
+	"fmt"
+	"log"
 	"math/rand"
+	"os"
+	"time"
 
-    "github.com/google/uuid"
+	"github.com/google/uuid"
 
 	"github.com/danilobml/motivate/internal/errs"
 	"github.com/danilobml/motivate/internal/models"
@@ -47,4 +53,36 @@ func (qs *QuoteService) CreateQuote(text, author string) (*models.Quote, error) 
 	}
 
 	return quote, nil
+}
+
+
+func (qs *QuoteService) SeedDbFromFile(filePath string) error {
+	start := time.Now()
+
+	file, err := os.Open(filePath)
+	if err != nil {
+		message := fmt.Sprintf("Failed to open json file: %s", err.Error())
+		return errors.New(message)
+	}
+	defer file.Close()
+
+	quotes := []models.Quote{}
+	err = json.NewDecoder(file).Decode(&quotes)
+	if err != nil {
+		return err
+	}
+
+	for _, quote := range quotes {
+		newQuote := models.Quote{
+			Id: quote.Id,
+			Text: quote.Text,
+			Author: quote.Author,
+		}
+		qs.quoteRepository.Save(newQuote)
+	}
+
+	elapsed := time.Since(start)
+	log.Printf("Quotes db seeded successfully! Elapsed time: %v\n", elapsed)
+
+	return nil
 }
