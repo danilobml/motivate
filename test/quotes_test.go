@@ -105,7 +105,7 @@ func Test_CreateNewQuote_Success(t *testing.T) {
 	require.Equal(t, author, quote.Author)
 }
 
-func Test_CreateNewQuote_Success_with_EmptyAuthor(t *testing.T) {
+func Test_CreateNewQuote_Success_with_EmptyAuthor_as_Unknown(t *testing.T) {
 	srv := setupServer(false)
 	defer srv.Close()
 
@@ -136,7 +136,7 @@ func Test_CreateNewQuote_Success_with_EmptyAuthor(t *testing.T) {
 	require.NoError(t, err, "failed to decode JSON response")
 
 	require.Equal(t, text, quote.Text)
-	require.Equal(t, author, quote.Author)
+	require.Equal(t, "Unknown", quote.Author)
 }
 
 func Test_CreateNewQuote_Fails_400_with_EmptyText(t *testing.T) {

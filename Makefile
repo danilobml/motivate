@@ -1,13 +1,18 @@
-.PHONY: test quote run run_seedfile run_seedapi
+.PHONY: test quote run run_seedfile run_seedapi build
 
-run:
-	go run ./cmd/api
+BIN := ./bin/motivate
 
-run_seedfile:
-	go run ./cmd/api --seed-file ./seed_quotes.json
+build:
+	go build -o $(BIN) ./cmd/api
 
-run_seedapi:
-	go run ./cmd/api --seed-api
+run: build
+	exec $(BIN) ./cmd/api
+
+run_seedfile: build
+	exec $(BIN) --seed-file ./seed_quotes.json
+
+run_seedapi: build
+	exec $(BIN) --seed-api
 
 test:
 	go test ./test -v 

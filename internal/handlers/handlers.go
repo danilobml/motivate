@@ -21,6 +21,10 @@ type NewQuoteRequest struct {
 	Author string `json:"author" validate:"max=128"`
 }
 
+type EmailRequest struct {
+	To      []string `json:"to" validate:"required,min=1,dive,required,email"`
+}
+
 func NewQuotesRouter(service *services.QuoteService) *QuotesRouter {
 	return &QuotesRouter{
 		quotesService: service,
@@ -49,17 +53,17 @@ func (qr *QuotesRouter) createQuote(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&quote)
 	if err != nil {
 		helpers.WriteJSONError(w, http.StatusBadRequest, "Invalid JSON")
-        return
-    }
-	
+		return
+	}
+
 	validate := validator.New()
 
-    err = validate.Struct(quote)
-    if err != nil {
-        errors := err.(validator.ValidationErrors)
+	err = validate.Struct(quote)
+	if err != nil {
+		errors := err.(validator.ValidationErrors)
 		helpers.WriteJSONError(w, http.StatusBadRequest, fmt.Sprintf("Validation error: %s", errors))
-        return
-    }
+		return
+	}
 
 	text := strings.TrimSpace(quote.Text)
 	author := strings.TrimSpace(quote.Author)
@@ -73,4 +77,36 @@ func (qr *QuotesRouter) createQuote(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(newQuote)
+}
+
+func (qr *QuotesRouter) emailRandomQuote(w http.ResponseWriter, r *http.Request) {
+	var requestBody EmailRequest
+
+	err := json.NewDecoder(r.Body).Decode(&requestBody)
+	if err != nil {
+		helpers.WriteJSONError(w, http.StatusBadRequest, "Invalid JSON")
+	}
+
+	validate := validator.New()
+
+	err = validate.Struct(requestBody)
+	if err != nil {
+		errors := err.(validator.ValidationErrors)
+		helpers.WriteJSONError(w, http.StatusBadRequest, fmt.Sprintf("Validation error: %s", errors))
+		return
+	}
+
+	quote, err := qr.quotesService.GetRandomQuote()
+	if err != nil {
+		helpers.WriteJSONError(w, http.StatusNotFound, err.Error())
+		return
+	}
+
+	body := fmt.Sprintf("\"%s\"\n\n - %s", quote.Text, quote.Author)
+
+	err = services.SendMail(requestBody.To, "A motivating quote for you", body)
+	if err != nil {
+		message := fmt.Sprintf("Failed to send email - %s", err.Error())
+		helpers.WriteJSONError(w, http.StatusInternalServerError, message)
+	}
 }
