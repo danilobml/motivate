@@ -14,6 +14,7 @@ import (
 
 type QuotesRouter struct {
 	quotesService *services.QuoteService
+	mailService   services.Mailer
 }
 
 type NewQuoteRequest struct {
@@ -22,12 +23,13 @@ type NewQuoteRequest struct {
 }
 
 type EmailRequest struct {
-	To      []string `json:"to" validate:"required,min=1,dive,required,email"`
+	To []string `json:"to" validate:"required,min=1,dive,required,email"`
 }
 
-func NewQuotesRouter(service *services.QuoteService) *QuotesRouter {
+func NewQuotesRouter(service *services.QuoteService, mailService services.Mailer) *QuotesRouter {
 	return &QuotesRouter{
 		quotesService: service,
+		mailService: mailService,
 	}
 }
 
@@ -104,7 +106,7 @@ func (qr *QuotesRouter) emailRandomQuote(w http.ResponseWriter, r *http.Request)
 
 	body := fmt.Sprintf("\"%s\"\n\n - %s", quote.Text, quote.Author)
 
-	err = services.SendMail(requestBody.To, "A motivating quote for you", body)
+	err = qr.mailService.SendMail(requestBody.To, "A motivating quote for you", body)
 	if err != nil {
 		message := fmt.Sprintf("Failed to send email - %s", err.Error())
 		helpers.WriteJSONError(w, http.StatusInternalServerError, message)

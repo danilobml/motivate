@@ -7,7 +7,17 @@ import (
 	"github.com/danilobml/motivate/internal/errs"
 )
 
-func SendMail(to []string, subject string, body string) error {
+type Mailer interface {
+	SendMail(to []string, subject string, body string) error
+}
+
+type MailService struct {}
+
+func NewMailService() *MailService {
+	return &MailService{}
+}
+
+func (ms *MailService) SendMail(to []string, subject string, body string) error {
 	if os.Getenv("FROM_EMAIL") == "" ||
 		os.Getenv("FROM_EMAIL_PASSWORD") == "" ||
 		os.Getenv("FROM_EMAIL_SMTP") == "" ||

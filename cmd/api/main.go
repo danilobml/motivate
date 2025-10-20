@@ -22,7 +22,8 @@ func main() {
 
 	quotesRepo := repositories.NewInMemoryQuoteRepository()
 	quotesService := services.NewQuoteService(quotesRepo)
-	quotesRouter := handlers.NewQuotesRouter(quotesService)
+	mailService := services.NewMailService()
+	quotesRouter := handlers.NewQuotesRouter(quotesService, mailService)
 
 	zenRepo := repositories.NewZenQuoteRepository("https://zenquotes.io/api/quotes")
 	zenService := services.NewZenQuoteService(quotesRepo, zenRepo)
