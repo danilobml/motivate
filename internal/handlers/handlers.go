@@ -8,6 +8,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 
+	"github.com/danilobml/motivate/internal/helpers"
 	"github.com/danilobml/motivate/internal/services"
 )
 
@@ -33,7 +34,7 @@ func getHealth(w http.ResponseWriter, r *http.Request) {
 func (qr *QuotesRouter) getRandomQuote(w http.ResponseWriter, r *http.Request) {
 	quote, err := qr.quotesService.GetRandomQuote()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
+		helpers.WriteJSONError(w, http.StatusNotFound, err.Error())
 		return
 	}
 
@@ -47,7 +48,7 @@ func (qr *QuotesRouter) createQuote(w http.ResponseWriter, r *http.Request) {
 	quote := NewQuoteRequest{}
 	err := json.NewDecoder(r.Body).Decode(&quote)
 	if err != nil {
-        http.Error(w, "Invalid JSON", http.StatusBadRequest)
+		helpers.WriteJSONError(w, http.StatusBadRequest, "Invalid JSON")
         return
     }
 	
@@ -56,7 +57,7 @@ func (qr *QuotesRouter) createQuote(w http.ResponseWriter, r *http.Request) {
     err = validate.Struct(quote)
     if err != nil {
         errors := err.(validator.ValidationErrors)
-        http.Error(w, fmt.Sprintf("Validation error: %s", errors), http.StatusBadRequest)
+		helpers.WriteJSONError(w, http.StatusBadRequest, fmt.Sprintf("Validation error: %s", errors))
         return
     }
 
@@ -65,7 +66,7 @@ func (qr *QuotesRouter) createQuote(w http.ResponseWriter, r *http.Request) {
 
 	newQuote, err := qr.quotesService.CreateQuote(text, author)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		helpers.WriteJSONError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 

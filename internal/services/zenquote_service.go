@@ -43,7 +43,7 @@ func (zs *ZenQuoteService) SeedDbFromApi() error {
 	}
 
 	elapsed := time.Since(start)
-	log.Printf("Quotes DB seeded successfully! Quotes loaded: %d. Elapsed time: %v.\n", len(zenQuotes), elapsed)
+	log.Printf("Quotes DB seeded successfully from API! Quotes loaded: %d. Elapsed time: %v.\n", len(zenQuotes), elapsed)
 	
 	return nil
 }
