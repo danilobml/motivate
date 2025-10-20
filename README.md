@@ -24,7 +24,6 @@ Features
 
 ### Prerequisites
 - Go 1.21+ (Go 1.24 recommended)
-- Internet access (for ZenQuotes seeding)
 - Optional: .env file for environment variables (necessary for email)
 
 ### Using Make
