@@ -41,6 +41,10 @@ func (qs *QuoteService) GetRandomQuote() (*models.Quote, error) {
 func (qs *QuoteService) CreateQuote(text, author string) (*models.Quote, error) {
 	id := uuid.New().String()
 
+	if author == "" {
+		author = "Unknown"
+	}
+
 	newQuote := models.Quote{
 		Id: id,
 		Text: text,
