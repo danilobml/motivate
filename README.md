@@ -56,6 +56,8 @@ go run ./cmd/api [flags]
 | `POST` | `/add` | Add a quote: `{ "text": "...", "author": "..." }` |
 | `POST` | `/share` | Send a random quote via email: `{ "to": ["user@example.com"] }` |
 
+E-mail can be sent to more than one address. e.g.: `{ "to": ["someone@example.com", "someone-else@example.com"] }`
+
 ### Example: Add a quote
 ```
 curl -X POST http://localhost:8080/add   -H "Content-Type: application/json"   -d '{"text": "Do or do not, there is no try.", "author": "Yoda"}'
@@ -86,7 +88,7 @@ Response:
 
 ### Example: Email a random quote
 ```
-curl -X POST http://localhost:8080/share   -H "Content-Type: application/json"   -d '{"to": ["someone@example.com"]}' (can be more than one address: ["someone@example.com", "someone-else@example.com"] )
+curl -X POST http://localhost:8080/share   -H "Content-Type: application/json"   -d '{"to": ["someone@example.com"]}'
 ```
 
 Response (on success): `200 OK`  
