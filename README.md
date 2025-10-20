@@ -4,6 +4,8 @@ A Go API that serves random motivational quotes.
 It supports seeding quotes from a local JSON file or directly from the ZenQuotes.io API,  
 and can optionally send a random quote to a friend by email.
 
+**Part of a series of mini-projects to get more knowledge of GO features and ecosystem.**
+
 ## Overview
 
 Motivate is a small API designed to demonstrate idiomatic Go web development using only the standard library and a few minimal helpers.
