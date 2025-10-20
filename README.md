@@ -123,13 +123,14 @@ To enable email delivery, set these environment variables in `.env` or your shel
 |-----------|--------------|---------|
 | `FROM_EMAIL` | Sender email address | `motivate@gmail.com` |
 | `FROM_EMAIL_PASSWORD` | Password or app-specific password | `app-pass-1234` |
-| `FROM_EMAIL_SMTP` | SMTP username (for auth) | `motivate@gmail.com` |
+| `FROM_EMAIL_SMTP` | SMTP username (for auth) | `smtp.gmail.com` |
 | `SMTP_ADDR` | SMTP host and port | `smtp.gmail.com:587` | (for Gmail)
 
 If any of these are missing, email functionality will be disabled and the `/share` endpoint will return:
 ```
 { "error": "mail service disabled" }
 ```
+Add your email address to the first variable, get the password (e.g. in Gmail, go to account settings -> app passwords) and add to the second. Modify SMTP and ADDR if not using Gmail.
 
 ## Testing
 
@@ -149,7 +150,7 @@ WRITE_TIMEOUT=15
 IDLE_TIMEOUT=60
 FROM_EMAIL=motivate@example.com
 FROM_EMAIL_PASSWORD=app-pass-1234
-FROM_EMAIL_SMTP=motivate@example.com
+FROM_EMAIL_SMTP=smtp.gmail.com
 SMTP_ADDR=smtp.gmail.com:587
 ```
 
