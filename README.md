@@ -1,4 +1,4 @@
-# Motivate — Simple Quote API
+# Motivate — Quote API
 
 A Go API that serves random motivational quotes.  
 It supports seeding quotes from a local JSON file or directly from the ZenQuotes.io API.
