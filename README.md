@@ -13,7 +13,7 @@ Motivate is a small API designed to demonstrate idiomatic Go web development usi
 Features
 - Serve random quotes via /quote
 - Add your own quotes via /add
-- Send a random quote by E-mail
+- Send a random quote by E-mail via /share
 - Optional seeding:
   - From a local JSON file (--seed-file)
   - From the ZenQuotes API (--seed-api)
